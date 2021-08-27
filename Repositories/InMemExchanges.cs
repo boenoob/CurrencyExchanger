@@ -52,12 +52,14 @@ namespace CurrencyExchanger.Repositories
         // GET specific rate
         public double GetRate(string currency1, string currency2)
         {
+            // updates rates 
             if (rates is null || TimeSinceUpdate() > updateInterval) StoreRatesFromFixer(); 
 
             double c1 = getEuroRate(currency1);
             double c2 = getEuroRate(currency2);
             double rate = c2/c1;
 
+            // invalid currency
             if (c1 < 0 || c2 < 0) return -1;
 
             return rate;
@@ -79,6 +81,7 @@ namespace CurrencyExchanger.Repositories
                     return rate.EuroRate;
                 }
             }
+            // invalid currency ---> negative rate
             return -1;    
         }
     }    

@@ -28,7 +28,7 @@ namespace CurrencyExchanger.Controllers {
             return rates;
         }
 
-        // GET - 
+        // GET /rate
         [HttpGet("rate")]
         public ActionResult<ExchangeDto> GetExchange2(string currency1, string currency2)
         {
@@ -42,7 +42,7 @@ namespace CurrencyExchanger.Controllers {
                 ExchangeRate = rate,
                 ConvertResult = 1 * rate
             };
-            if (rate < 0) return NotFound();
+            if (rate < 0) return BadRequest("Invalid currency");;
             return exchange.AsDto();
         }
 
@@ -51,7 +51,7 @@ namespace CurrencyExchanger.Controllers {
         {
             double rate = repository.GetRate(currency1, currency2); // GET RATE FROM REPO
 
-            if (rate < 0) return NotFound();
+            if (rate < 0) return BadRequest("Invalid currency");
             
             Exchange exchange = new() 
             {
