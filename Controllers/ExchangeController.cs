@@ -5,6 +5,7 @@ using CurrencyExchanger.Dtos;
 using CurrencyExchanger.Entities;
 using CurrencyExchanger.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace CurrencyExchanger.Controllers {
  
@@ -13,14 +14,17 @@ namespace CurrencyExchanger.Controllers {
     public class ExchangeController : ControllerBase 
     {
         private readonly ExchangesInterface repository;
-
-        public ExchangeController(ExchangesInterface repository) 
+        private readonly IConfiguration _configuration;
+        
+        public ExchangeController(ExchangesInterface repository, IConfiguration configuration) 
         {
             this.repository = repository;
+            _configuration = configuration;
+            this.repository.SetApiKey(_configuration.GetValue<string>("ApiKey"));
         }
 
         // GET /exchange
-        [HttpGet]
+        [HttpGet]   
         public IEnumerable<RateDto> GetExchangeRates()
         {
             repository.StoreRatesFromFixer();

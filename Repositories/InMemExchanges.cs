@@ -4,11 +4,13 @@ using CurrencyExchanger.Entities;
 using System.IO;
 using Newtonsoft.Json;
 using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace CurrencyExchanger.Repositories 
 {
     public class InMemExchanges : ExchangesInterface
     {
+        private string API_KEY;
         public DateTimeOffset lastUpdated;
         private Rates EuroRates;
         private const double updateInterval = 12;
@@ -17,7 +19,8 @@ namespace CurrencyExchanger.Repositories
         // Get lates exchangerates from fixer
         public void StoreRatesFromFixer() 
         {
-            string resquestUri = String.Format("http://data.fixer.io/api/latest?access_key=9f7fd6307633c37c3716508ecef9c9f5");
+            
+            string resquestUri = $"http://data.fixer.io/api/latest?access_key={API_KEY}";
             WebRequest requestObjectGet = WebRequest.Create(resquestUri);
             requestObjectGet.Method = "GET";
             HttpWebResponse responseObjectGet = null;
@@ -83,6 +86,11 @@ namespace CurrencyExchanger.Repositories
             }
             // invalid currency ---> negative rate
             return -1;    
+        }
+
+        public void SetApiKey(string key)
+        {
+            API_KEY = key;
         }
     }    
 }
